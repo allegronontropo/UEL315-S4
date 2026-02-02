@@ -1,0 +1,9 @@
+# Semaine 4 – Node.js, Express et MongoDB
+
+Ce dépôt sert de point de départ pour la semaine 4 consacrée à l’utilisation de MongoDB côté serveur avec Node.js et Express.
+
+## Lancer le projet
+
+1. Installer les dépendances :
+   ```bash
+   npm install

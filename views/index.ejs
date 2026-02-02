@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catalogue de Documents</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div>
+        <h1>Catalogue de Documents</h1>
+        <p>Connexion à MongoDB Atlas</p>
+      </div>
+      <a class="btn secondary" href="/stats">Voir les statistiques</a>
+    </header>
+
+    <section class="filters">
+      <form method="get" action="/">
+        <input
+          type="text"
+          name="search"
+          placeholder="Rechercher un titre ou auteur"
+          value="<%= query.search %>"
+        />
+        <select name="type">
+          <option value="all" <%= query.type === 'all' ? 'selected' : '' %>>Tous les types</option>
+          <option value="Livre" <%= query.type === 'Livre' ? 'selected' : '' %>>Livre</option>
+          <option value="CD" <%= query.type === 'CD' ? 'selected' : '' %>>CD</option>
+          <option value="DVD" <%= query.type === 'DVD' ? 'selected' : '' %>>DVD</option>
+        </select>
+        <select name="status">
+          <option value="all" <%= query.status === 'all' ? 'selected' : '' %>>Tous les statuts</option>
+          <option value="available" <%= query.status === 'available' ? 'selected' : '' %>>Disponible</option>
+          <option value="borrowed" <%= query.status === 'borrowed' ? 'selected' : '' %>>Emprunté</option>
+        </select>
+        <select name="sort">
+          <option value="default" <%= query.sort === 'default' ? 'selected' : '' %>>Tri par défaut</option>
+          <option value="title" <%= query.sort === 'title' ? 'selected' : '' %>>Tri alphabétique (titre)</option>
+          <option value="author" <%= query.sort === 'author' ? 'selected' : '' %>>Tri alphabétique (auteur)</option>
+          <option value="type" <%= query.sort === 'type' ? 'selected' : '' %>>Tri par type</option>
+        </select>
+        <button class="btn primary" type="submit">Charger</button>
+      </form>
+    </section>
+
+    <section class="summary">
+      <span><strong><%= totalAvailable %></strong> disponibles</span>
+      <span><strong><%= totalBorrowed %></strong> empruntés</span>
+      <span><strong><%= total %></strong> document(s) au total</span>
+    </section>
+
+    <section class="grid">
+      <% if (documents.length === 0) { %>
+        <p class="empty">Aucun document ne correspond à votre recherche.</p>
+      <% } %>
+      <% documents.forEach((doc) => { %>
+        <article class="card">
+          <header>
+            <h2><%= doc.title %></h2>
+            <span class="badge <%= doc.available ? 'available' : 'borrowed' %>">
+              <%= doc.available ? 'Disponible' : 'Emprunté' %>
+            </span>
+          </header>
+          <p><strong>Auteur :</strong> <%= doc.author %></p>
+          <p><strong>Type :</strong> <%= doc.type %></p>
+          <p><strong>Réservations :</strong> <%= doc.reservations %></p>
+          <p><strong>Rang :</strong> <%= doc.rank %></p>
+          <p class="id"><strong>ID :</strong> <%= doc.id %></p>
+
+          <form method="post" action="/documents/<%= doc.id %>/toggle">
+            <button class="btn action" type="submit">
+              <%= doc.available ? 'Emprunter' : 'Ramener' %>
+            </button>
+          </form>
+        </article>
+      <% }) %>
+    </section>
+
+    <nav class="pagination">
+      <% const totalPages = Math.ceil(total / limit) || 1; %>
+      <span>Page <%= page %> / <%= totalPages %></span>
+      <div>
+        <% if (page > 1) { %>
+          <a class="btn secondary" href="/?page=<%= page - 1 %>&limit=<%= limit %>&search=<%= query.search %>&type=<%= query.type %>&status=<%= query.status %>&sort=<%= query.sort %>">Précédent</a>
+        <% } %>
+        <% if (page < totalPages) { %>
+          <a class="btn secondary" href="/?page=<%= page + 1 %>&limit=<%= limit %>&search=<%= query.search %>&type=<%= query.type %>&status=<%= query.status %>&sort=<%= query.sort %>">Suivant</a>
+        <% } %>
+      </div>
+    </nav>
+  </body>
+</html>

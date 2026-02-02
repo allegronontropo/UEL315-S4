@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Statistiques</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div>
+        <h1>Statistiques</h1>
+        <p>Vue d’ensemble des documents</p>
+      </div>
+      <a class="btn secondary" href="/">Retour au catalogue</a>
+    </header>
+
+    <section class="stats">
+      <div class="stat">
+        <h2><%= total %></h2>
+        <p>Documents au total</p>
+      </div>
+      <div class="stat">
+        <h2><%= available %></h2>
+        <p>Disponibles</p>
+      </div>
+      <div class="stat">
+        <h2><%= borrowed %></h2>
+        <p>Empruntés</p>
+      </div>
+    </section>
+
+    <section class="stats-table">
+      <h2>Répartition par type</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Nombre</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (types.length === 0) { %>
+            <tr>
+              <td colspan="2">Aucune donnée disponible.</td>
+            </tr>
+          <% } %>
+          <% types.forEach((type) => { %>
+            <tr>
+              <td><%= type._id || 'Inconnu' %></td>
+              <td><%= type.count %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+  </body>
+</html>
